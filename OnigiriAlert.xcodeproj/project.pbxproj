@@ -379,6 +379,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
 				INFOPLIST_FILE = "OnigiriAlert/OnigiriAlert-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -392,6 +393,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
 				INFOPLIST_FILE = "OnigiriAlert/OnigiriAlert-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -456,6 +458,7 @@
 				EDD7DF7218AB201A003CDF8C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EDD7DF7318AB201A003CDF8C /* Build configuration list for PBXNativeTarget "OnigiriAlertTests" */ = {
 			isa = XCConfigurationList;
@@ -464,6 +467,7 @@
 				EDD7DF7518AB201A003CDF8C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
