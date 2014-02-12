@@ -1,0 +1,471 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EDD7DF4218AB201A003CDF8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4118AB201A003CDF8C /* Foundation.framework */; };
+		EDD7DF4418AB201A003CDF8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4318AB201A003CDF8C /* CoreGraphics.framework */; };
+		EDD7DF4618AB201A003CDF8C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4518AB201A003CDF8C /* UIKit.framework */; };
+		EDD7DF4C18AB201A003CDF8C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF4A18AB201A003CDF8C /* InfoPlist.strings */; };
+		EDD7DF4E18AB201A003CDF8C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF4D18AB201A003CDF8C /* main.m */; };
+		EDD7DF5218AB201A003CDF8C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF5118AB201A003CDF8C /* AppDelegate.m */; };
+		EDD7DF5518AB201A003CDF8C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF5318AB201A003CDF8C /* Main.storyboard */; };
+		EDD7DF5818AB201A003CDF8C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF5718AB201A003CDF8C /* ViewController.m */; };
+		EDD7DF5A18AB201A003CDF8C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF5918AB201A003CDF8C /* Images.xcassets */; };
+		EDD7DF6118AB201A003CDF8C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF6018AB201A003CDF8C /* XCTest.framework */; };
+		EDD7DF6218AB201A003CDF8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4118AB201A003CDF8C /* Foundation.framework */; };
+		EDD7DF6318AB201A003CDF8C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4518AB201A003CDF8C /* UIKit.framework */; };
+		EDD7DF6B18AB201A003CDF8C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF6918AB201A003CDF8C /* InfoPlist.strings */; };
+		EDD7DF6D18AB201A003CDF8C /* OnigiriAlertTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF6C18AB201A003CDF8C /* OnigiriAlertTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EDD7DF6418AB201A003CDF8C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDD7DF3618AB201A003CDF8C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EDD7DF3D18AB201A003CDF8C;
+			remoteInfo = OnigiriAlert;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EDD7DF3E18AB201A003CDF8C /* OnigiriAlert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnigiriAlert.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDD7DF4118AB201A003CDF8C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EDD7DF4318AB201A003CDF8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EDD7DF4518AB201A003CDF8C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EDD7DF4918AB201A003CDF8C /* OnigiriAlert-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OnigiriAlert-Info.plist"; sourceTree = "<group>"; };
+		EDD7DF4B18AB201A003CDF8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EDD7DF4D18AB201A003CDF8C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EDD7DF4F18AB201A003CDF8C /* OnigiriAlert-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnigiriAlert-Prefix.pch"; sourceTree = "<group>"; };
+		EDD7DF5018AB201A003CDF8C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EDD7DF5118AB201A003CDF8C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EDD7DF5418AB201A003CDF8C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EDD7DF5618AB201A003CDF8C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		EDD7DF5718AB201A003CDF8C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		EDD7DF5918AB201A003CDF8C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EDD7DF5F18AB201A003CDF8C /* OnigiriAlertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnigiriAlertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDD7DF6018AB201A003CDF8C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		EDD7DF6818AB201A003CDF8C /* OnigiriAlertTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OnigiriAlertTests-Info.plist"; sourceTree = "<group>"; };
+		EDD7DF6A18AB201A003CDF8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EDD7DF6C18AB201A003CDF8C /* OnigiriAlertTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OnigiriAlertTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EDD7DF3B18AB201A003CDF8C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF4418AB201A003CDF8C /* CoreGraphics.framework in Frameworks */,
+				EDD7DF4618AB201A003CDF8C /* UIKit.framework in Frameworks */,
+				EDD7DF4218AB201A003CDF8C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDD7DF5C18AB201A003CDF8C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF6118AB201A003CDF8C /* XCTest.framework in Frameworks */,
+				EDD7DF6318AB201A003CDF8C /* UIKit.framework in Frameworks */,
+				EDD7DF6218AB201A003CDF8C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EDD7DF3518AB201A003CDF8C = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF4718AB201A003CDF8C /* OnigiriAlert */,
+				EDD7DF6618AB201A003CDF8C /* OnigiriAlertTests */,
+				EDD7DF4018AB201A003CDF8C /* Frameworks */,
+				EDD7DF3F18AB201A003CDF8C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EDD7DF3F18AB201A003CDF8C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF3E18AB201A003CDF8C /* OnigiriAlert.app */,
+				EDD7DF5F18AB201A003CDF8C /* OnigiriAlertTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EDD7DF4018AB201A003CDF8C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF4118AB201A003CDF8C /* Foundation.framework */,
+				EDD7DF4318AB201A003CDF8C /* CoreGraphics.framework */,
+				EDD7DF4518AB201A003CDF8C /* UIKit.framework */,
+				EDD7DF6018AB201A003CDF8C /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EDD7DF4718AB201A003CDF8C /* OnigiriAlert */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF5018AB201A003CDF8C /* AppDelegate.h */,
+				EDD7DF5118AB201A003CDF8C /* AppDelegate.m */,
+				EDD7DF5318AB201A003CDF8C /* Main.storyboard */,
+				EDD7DF5618AB201A003CDF8C /* ViewController.h */,
+				EDD7DF5718AB201A003CDF8C /* ViewController.m */,
+				EDD7DF5918AB201A003CDF8C /* Images.xcassets */,
+				EDD7DF4818AB201A003CDF8C /* Supporting Files */,
+			);
+			path = OnigiriAlert;
+			sourceTree = "<group>";
+		};
+		EDD7DF4818AB201A003CDF8C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF4918AB201A003CDF8C /* OnigiriAlert-Info.plist */,
+				EDD7DF4A18AB201A003CDF8C /* InfoPlist.strings */,
+				EDD7DF4D18AB201A003CDF8C /* main.m */,
+				EDD7DF4F18AB201A003CDF8C /* OnigiriAlert-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EDD7DF6618AB201A003CDF8C /* OnigiriAlertTests */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF6C18AB201A003CDF8C /* OnigiriAlertTests.m */,
+				EDD7DF6718AB201A003CDF8C /* Supporting Files */,
+			);
+			path = OnigiriAlertTests;
+			sourceTree = "<group>";
+		};
+		EDD7DF6718AB201A003CDF8C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EDD7DF6818AB201A003CDF8C /* OnigiriAlertTests-Info.plist */,
+				EDD7DF6918AB201A003CDF8C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EDD7DF3D18AB201A003CDF8C /* OnigiriAlert */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDD7DF7018AB201A003CDF8C /* Build configuration list for PBXNativeTarget "OnigiriAlert" */;
+			buildPhases = (
+				EDD7DF3A18AB201A003CDF8C /* Sources */,
+				EDD7DF3B18AB201A003CDF8C /* Frameworks */,
+				EDD7DF3C18AB201A003CDF8C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnigiriAlert;
+			productName = OnigiriAlert;
+			productReference = EDD7DF3E18AB201A003CDF8C /* OnigiriAlert.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EDD7DF5E18AB201A003CDF8C /* OnigiriAlertTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDD7DF7318AB201A003CDF8C /* Build configuration list for PBXNativeTarget "OnigiriAlertTests" */;
+			buildPhases = (
+				EDD7DF5B18AB201A003CDF8C /* Sources */,
+				EDD7DF5C18AB201A003CDF8C /* Frameworks */,
+				EDD7DF5D18AB201A003CDF8C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EDD7DF6518AB201A003CDF8C /* PBXTargetDependency */,
+			);
+			name = OnigiriAlertTests;
+			productName = OnigiriAlertTests;
+			productReference = EDD7DF5F18AB201A003CDF8C /* OnigiriAlertTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EDD7DF3618AB201A003CDF8C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "Hiroyuki Onishi";
+				TargetAttributes = {
+					EDD7DF5E18AB201A003CDF8C = {
+						TestTargetID = EDD7DF3D18AB201A003CDF8C;
+					};
+				};
+			};
+			buildConfigurationList = EDD7DF3918AB201A003CDF8C /* Build configuration list for PBXProject "OnigiriAlert" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EDD7DF3518AB201A003CDF8C;
+			productRefGroup = EDD7DF3F18AB201A003CDF8C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EDD7DF3D18AB201A003CDF8C /* OnigiriAlert */,
+				EDD7DF5E18AB201A003CDF8C /* OnigiriAlertTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EDD7DF3C18AB201A003CDF8C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF5A18AB201A003CDF8C /* Images.xcassets in Resources */,
+				EDD7DF4C18AB201A003CDF8C /* InfoPlist.strings in Resources */,
+				EDD7DF5518AB201A003CDF8C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDD7DF5D18AB201A003CDF8C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF6B18AB201A003CDF8C /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EDD7DF3A18AB201A003CDF8C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF5818AB201A003CDF8C /* ViewController.m in Sources */,
+				EDD7DF5218AB201A003CDF8C /* AppDelegate.m in Sources */,
+				EDD7DF4E18AB201A003CDF8C /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDD7DF5B18AB201A003CDF8C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDD7DF6D18AB201A003CDF8C /* OnigiriAlertTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EDD7DF6518AB201A003CDF8C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EDD7DF3D18AB201A003CDF8C /* OnigiriAlert */;
+			targetProxy = EDD7DF6418AB201A003CDF8C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EDD7DF4A18AB201A003CDF8C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDD7DF4B18AB201A003CDF8C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EDD7DF5318AB201A003CDF8C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDD7DF5418AB201A003CDF8C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		EDD7DF6918AB201A003CDF8C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EDD7DF6A18AB201A003CDF8C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EDD7DF6E18AB201A003CDF8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		EDD7DF6F18AB201A003CDF8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EDD7DF7118AB201A003CDF8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
+				INFOPLIST_FILE = "OnigiriAlert/OnigiriAlert-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EDD7DF7218AB201A003CDF8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
+				INFOPLIST_FILE = "OnigiriAlert/OnigiriAlert-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		EDD7DF7418AB201A003CDF8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnigiriAlert.app/OnigiriAlert";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "OnigiriAlertTests/OnigiriAlertTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		EDD7DF7518AB201A003CDF8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/OnigiriAlert.app/OnigiriAlert";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OnigiriAlert/OnigiriAlert-Prefix.pch";
+				INFOPLIST_FILE = "OnigiriAlertTests/OnigiriAlertTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EDD7DF3918AB201A003CDF8C /* Build configuration list for PBXProject "OnigiriAlert" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDD7DF6E18AB201A003CDF8C /* Debug */,
+				EDD7DF6F18AB201A003CDF8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EDD7DF7018AB201A003CDF8C /* Build configuration list for PBXNativeTarget "OnigiriAlert" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDD7DF7118AB201A003CDF8C /* Debug */,
+				EDD7DF7218AB201A003CDF8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EDD7DF7318AB201A003CDF8C /* Build configuration list for PBXNativeTarget "OnigiriAlertTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDD7DF7418AB201A003CDF8C /* Debug */,
+				EDD7DF7518AB201A003CDF8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EDD7DF3618AB201A003CDF8C /* Project object */;
+}
