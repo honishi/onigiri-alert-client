@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DBC0339E18ABBA0D001061D9 /* onigiri.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DBC0339D18ABBA0D001061D9 /* onigiri.jpg */; };
-		DBC0339F18ABBA0D001061D9 /* onigiri.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DBC0339D18ABBA0D001061D9 /* onigiri.jpg */; };
 		ED12144218AB2FAD008A913D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144118AB2FAD008A913D /* Parse.framework */; };
 		ED12144518AB2FDB008A913D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144418AB2FDB008A913D /* AudioToolbox.framework */; };
 		ED12144718AB2FE7008A913D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144618AB2FE7008A913D /* CFNetwork.framework */; };
@@ -46,7 +44,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DBC0339D18ABBA0D001061D9 /* onigiri.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = onigiri.jpg; sourceTree = "<group>"; };
 		ED12144118AB2FAD008A913D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = frameworks/Parse.framework; sourceTree = "<group>"; };
 		ED12144418AB2FDB008A913D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		ED12144618AB2FE7008A913D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -165,7 +162,6 @@
 				EDD7DF5618AB201A003CDF8C /* ViewController.h */,
 				EDD7DF5718AB201A003CDF8C /* ViewController.m */,
 				EDD7DF5918AB201A003CDF8C /* Images.xcassets */,
-				DBC0339D18ABBA0D001061D9 /* onigiri.jpg */,
 				EDD7DF4818AB201A003CDF8C /* Supporting Files */,
 			);
 			path = OnigiriAlert;
@@ -279,7 +275,6 @@
 				EDD7DF5A18AB201A003CDF8C /* Images.xcassets in Resources */,
 				EDD7DF4C18AB201A003CDF8C /* InfoPlist.strings in Resources */,
 				EDD7DF5518AB201A003CDF8C /* Main.storyboard in Resources */,
-				DBC0339E18ABBA0D001061D9 /* onigiri.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,7 +283,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDD7DF6B18AB201A003CDF8C /* InfoPlist.strings in Resources */,
-				DBC0339F18ABBA0D001061D9 /* onigiri.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
