@@ -7,11 +7,23 @@
 //
 
 #import "ViewController.h"
+#import "Credential.h"
+
+static NSString* const kTwitCastingApiServer = @"http://api.twitcasting.tv";
+static NSString* const kApiPathLiveStatus = @"/api/livestatus";
+
+static NSString* const kTwitCastingUrlSchemeOpenLive = @"tcviewer://live/";
+
+typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
-@property (weak, nonatomic) IBOutlet UILabel *liveStatusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *liveStatusMessageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lastUpdateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lastUpdateDateLabel;
+@property (weak, nonatomic) IBOutlet UIButton *openLiveButton;
+@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
 
 @end
 
@@ -22,7 +34,10 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    if (![ViewController canOpenLive:[ViewController urlForLive]]) {
+        self.openLiveButton.hidden = YES;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -41,20 +56,94 @@
 // #pragma mark - Property Methods
 // #pragma mark - [ClassName] Overrides
 // #pragma mark - [ProtocolName] Methods
-// #pragma mark - Public Interface
+
+#pragma mark - Public Interface
+
++(NSURL*)urlForLive
+{
+    NSString* urlSchemeString = [kTwitCastingUrlSchemeOpenLive stringByAppendingString:TARGET_USER];
+    return [NSURL URLWithString:urlSchemeString];
+}
+
++(BOOL)canOpenLive:(NSURL*)url
+{
+    return [[UIApplication sharedApplication] canOpenURL:url];
+}
+
++(void)openLive
+{
+    NSURL* url = [ViewController urlForLive];
+    
+    if ([ViewController canOpenLive:url]) {
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
+
+#pragma mark Button Handler
+
+- (IBAction)openLive:(id)sender
+{
+    [ViewController openLive];
+}
+
+- (IBAction)refreshLiveStatus:(id)sender
+{
+    [self updateLiveStatus];
+}
 
 #pragma mark - Internal Methods
 
 -(void)updateLiveStatus
 {
-    [self.activityIndicatorView startAnimating];
+    NSString* urlString = [NSString stringWithFormat:@"%@%@?type=json&user=%@", kTwitCastingApiServer, kApiPathLiveStatus, TARGET_USER];
+    NSURL* url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    asyncRequestCompletionBlock requestCompletion = ^(NSURLResponse* response, NSData* data, NSError* error) {
         [self.activityIndicatorView stopAnimating];
-        self.liveStatusLabel.text = @"live status here";
-    });
+        self.refreshButton.enabled = YES;
+        
+        self.lastUpdateLabel.textColor = [UIColor whiteColor];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        self.lastUpdateDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        self.lastUpdateDateLabel.textColor = [UIColor whiteColor];
+        
+        if (error) {
+            return;
+        }
+        
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        
+        if (httpResponse.statusCode != 200) {
+            return;
+        }
+        
+        NSError* jsonParseError = nil;
+        NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParseError];
+        
+        NSLog(@"json: %@", jsonObject);
+        
+        // NSString* loginId = jsonObject[@"data"][@"user"][@"login_id"];
+        NSNumber* isLive = jsonObject[@"islive"];
+        
+        if ([isLive intValue]) {
+            self.liveStatusMessageLabel.text = @"放送中のようです.";
+            self.liveStatusMessageLabel.textColor = [UIColor redColor];
+            self.lastUpdateLabel.textColor = [UIColor redColor];
+            self.lastUpdateDateLabel.textColor = [UIColor redColor];
+        }
+        else {
+            self.liveStatusMessageLabel.text = @"放送してないようです.";
+            self.liveStatusMessageLabel.textColor = [UIColor whiteColor];
+        }
+    };
+    
+    [self.activityIndicatorView startAnimating];
+    self.refreshButton.enabled = NO;
+    self.liveStatusMessageLabel.text = @"...";
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
 }
 
 @end
