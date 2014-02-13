@@ -11,8 +11,9 @@
 
 static NSString* const kTwitCastingApiServer = @"http://api.twitcasting.tv";
 static NSString* const kApiPathLiveStatus = @"/api/livestatus";
-
 static NSString* const kTwitCastingUrlSchemeOpenLive = @"tcviewer://live/";
+
+static CGFloat const kStatusUpdateTimerInterval = 10.0f;
 
 typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
 
@@ -31,6 +32,15 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 #pragma mark - Object Lifecycle
 
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+// #pragma mark - Property Methods
+
+#pragma mark - UIViewController Overrides
+
 -(void)viewDidLoad
 {
     [super viewDidLoad];
@@ -38,6 +48,13 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     if (![ViewController canOpenLive:[ViewController urlForLive]]) {
         self.openLiveButton.hidden = YES;
     }
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(applicationDidBecomeActive:)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+    
+    [NSTimer scheduledTimerWithTimeInterval:kStatusUpdateTimerInterval target:self selector:@selector(updateLiveStatus) userInfo:nil repeats:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -53,8 +70,6 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     // Dispose of any resources that can be recreated.
 }
 
-// #pragma mark - Property Methods
-// #pragma mark - [ClassName] Overrides
 // #pragma mark - [ProtocolName] Methods
 
 #pragma mark - Public Interface
@@ -141,9 +156,16 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     
     [self.activityIndicatorView startAnimating];
     self.refreshButton.enabled = NO;
-    self.liveStatusMessageLabel.text = @"...";
+    // self.liveStatusMessageLabel.text = @"...";
     
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
+}
+
+#pragma mark Notification hander
+
+-(void)applicationDidBecomeActive:(NSNotification*)notification
+{
+    [self updateLiveStatus];
 }
 
 @end

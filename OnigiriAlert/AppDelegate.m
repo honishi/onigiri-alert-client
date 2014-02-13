@@ -11,6 +11,10 @@
 #import "ViewController.h"
 #import <Parse/Parse.h>
 
+@interface AppDelegate () <UIActionSheetDelegate>
+
+@end
+
 @implementation AppDelegate
 
 -(BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
@@ -43,7 +47,31 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
-    [PFPush handlePush:userInfo];
+    
+    if (application.applicationState == UIApplicationStateInactive) {
+        [self launchViewer];
+    }
+    else if (application.applicationState == UIApplicationStateActive) {
+        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"放送がはじまりました."
+                                                                           delegate:self
+                                                                  cancelButtonTitle:nil
+                                                             destructiveButtonTitle:nil
+                                                                  otherButtonTitles:nil];
+        [actionSheet addButtonWithTitle:@"見る"];
+        [actionSheet addButtonWithTitle:@"キャンセル"];
+        actionSheet.cancelButtonIndex = actionSheet.numberOfButtons-1;
+        
+        UIView* mainView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+        [actionSheet showInView:mainView];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == actionSheet.numberOfButtons-1) {     // cancel
+        return;
+    }
+    
     [self launchViewer];
 }
 
