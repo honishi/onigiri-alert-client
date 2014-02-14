@@ -19,7 +19,7 @@
 
 -(BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-    NSLog(@"applicationDidFinishLaunchingWithOptions w/ launchOptions: %@", launchOptions);
+    // NSLog(@"applicationDidFinishLaunchingWithOptions w/ launchOptions: %@", launchOptions);
 
     [Parse setApplicationId:PARSE_APPLICATION_ID clientKey:PARSE_CLIENT_KEY];
     
@@ -36,7 +36,7 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
-    NSLog(@"token: %@", newDeviceToken);
+    NSLog(@"device token: %@", newDeviceToken);
     
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
@@ -46,7 +46,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
+    // NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
     
     if (application.applicationState == UIApplicationStateInactive) {
         [self launchViewer];
@@ -61,7 +61,7 @@
         [actionSheet addButtonWithTitle:@"キャンセル"];
         actionSheet.cancelButtonIndex = actionSheet.numberOfButtons-1;
         
-        UIView* mainView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+        UIView* mainView = self.window.rootViewController.view;
         [actionSheet showInView:mainView];
     }
 }

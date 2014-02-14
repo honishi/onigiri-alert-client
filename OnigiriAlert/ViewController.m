@@ -37,8 +37,6 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-// #pragma mark - Property Methods
-
 #pragma mark - UIViewController Overrides
 
 -(void)viewDidLoad
@@ -67,10 +65,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-// #pragma mark - [ProtocolName] Methods
 
 #pragma mark - Public Interface
 
@@ -137,9 +132,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         NSError* jsonParseError = nil;
         NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParseError];
         
-        NSLog(@"json: %@", jsonObject);
-        
-        // NSString* loginId = jsonObject[@"data"][@"user"][@"login_id"];
+        // NSLog(@"json: %@", jsonObject);
         NSNumber* isLive = jsonObject[@"islive"];
         
         if ([isLive intValue]) {
@@ -156,7 +149,6 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     
     [self.activityIndicatorView startAnimating];
     self.refreshButton.enabled = NO;
-    // self.liveStatusMessageLabel.text = @"...";
     
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
 }
