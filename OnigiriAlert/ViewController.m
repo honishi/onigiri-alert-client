@@ -19,12 +19,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 @interface ViewController ()
 
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
-@property (weak, nonatomic) IBOutlet UILabel *liveStatusMessageLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lastUpdateLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lastUpdateDateLabel;
-@property (weak, nonatomic) IBOutlet UIButton *openLiveButton;
-@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView* activityIndicatorView;
+@property (weak, nonatomic) IBOutlet UILabel* liveStatusMessageLabel;
+@property (weak, nonatomic) IBOutlet UILabel* lastUpdateLabel;
+@property (weak, nonatomic) IBOutlet UILabel* lastUpdateDateLabel;
+@property (weak, nonatomic) IBOutlet UIButton* openLiveButton;
+@property (weak, nonatomic) IBOutlet UIButton* refreshButton;
 
 @end
 
@@ -42,23 +42,23 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     if (![ViewController canOpenLive:[ViewController urlForLive]]) {
         self.openLiveButton.hidden = YES;
     }
-    
+
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(applicationDidBecomeActive:)
                                                name:UIApplicationDidBecomeActiveNotification
                                              object:nil];
-    
+
     [NSTimer scheduledTimerWithTimeInterval:kStatusUpdateTimerInterval target:self selector:@selector(updateLiveStatus) userInfo:nil repeats:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     [self updateLiveStatus];
 }
 
@@ -83,7 +83,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 +(void)openLive
 {
     NSURL* url = [ViewController urlForLive];
-    
+
     if ([ViewController canOpenLive:url]) {
         [[UIApplication sharedApplication] openURL:url];
     }
@@ -91,12 +91,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 #pragma mark Button Handler
 
-- (IBAction)openLive:(id)sender
+-(IBAction)openLive:(id)sender
 {
     [ViewController openLive];
 }
 
-- (IBAction)refreshLiveStatus:(id)sender
+-(IBAction)refreshLiveStatus:(id)sender
 {
     [self updateLiveStatus];
 }
@@ -108,33 +108,33 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     NSString* urlString = [NSString stringWithFormat:@"%@%@?type=json&user=%@", kTwitCastingApiServer, kApiPathLiveStatus, TARGET_USER];
     NSURL* url = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
-    
+
     asyncRequestCompletionBlock requestCompletion = ^(NSURLResponse* response, NSData* data, NSError* error) {
         [self.activityIndicatorView stopAnimating];
         self.refreshButton.enabled = YES;
-        
+
         self.lastUpdateLabel.textColor = [UIColor whiteColor];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         self.lastUpdateDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
         self.lastUpdateDateLabel.textColor = [UIColor whiteColor];
-        
+
         if (error) {
             return;
         }
-        
+
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        
+
         if (httpResponse.statusCode != 200) {
             return;
         }
-        
+
         NSError* jsonParseError = nil;
         NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParseError];
-        
+
         // NSLog(@"json: %@", jsonObject);
         NSNumber* isLive = jsonObject[@"islive"];
-        
+
         if ([isLive intValue]) {
             self.liveStatusMessageLabel.text = @"放送中のようです.";
             self.liveStatusMessageLabel.textColor = [UIColor redColor];
@@ -146,10 +146,10 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
             self.liveStatusMessageLabel.textColor = [UIColor whiteColor];
         }
     };
-    
+
     [self.activityIndicatorView startAnimating];
     self.refreshButton.enabled = NO;
-    
+
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
 }
 
