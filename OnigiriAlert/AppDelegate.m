@@ -11,6 +11,9 @@
 #import "ViewController.h"
 #import <Parse/Parse.h>
 
+static NSString* const kParseInstallationKeyChannels = @"channels";
+static NSString* const kParseDefaultChannel = @"default";
+
 @interface AppDelegate ()<UIActionSheetDelegate>
 
 @end
@@ -41,6 +44,7 @@
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation* currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    [currentInstallation addUniqueObject:kParseDefaultChannel forKey:kParseInstallationKeyChannels];
     [currentInstallation saveInBackground];
 }
 
