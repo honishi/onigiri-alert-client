@@ -1,10 +1,5 @@
 Onigiri Alert Client
 ==
-implementation of rapid push notification for specified user's twitcasting live.
-
-* server implementation: https://github.com/honishi/onigiri-alert-server
-* client implementation: https://github.com/honishi/onigiri-alert-client
-
 see [description](https://github.com/honishi/onigiri-alert-server) of server implementation for details.
 
 repository setup
