@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  MainViewController.h
 //  OnigiriAlert
 //
 //  Created by Hiroyuki Onishi on 2/12/14.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
-+(void)openLive;
+@interface MainViewController : UIViewController
 
 @end

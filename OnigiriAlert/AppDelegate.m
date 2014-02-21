@@ -8,11 +8,23 @@
 
 #import "AppDelegate.h"
 #import "Credential.h"
-#import "ViewController.h"
+#import "TwitCastingUtility.h"
 #import <Parse/Parse.h>
 
-static NSString* const kParseInstallationKeyChannels = @"channels";
-static NSString* const kParseDefaultChannel = @"default";
+#ifdef DEBUG
+
+#define DUMP_PFINSTLATION(installation) { \
+        NSLog(@"pfinstallation: %@", installation); \
+        NSLog(@"pfinstallation, objectId: %@", installation.objectId); \
+        NSLog(@"pfinstallation, created: %@ updated: %@", installation.createdAt, installation.updatedAt); \
+        NSLog(@"pfinstallation, allKeys: %@", installation.allKeys); \
+}
+
+#else
+
+#define DUMP_PFINSTLATION(install) ;
+
+#endif
 
 @interface AppDelegate ()<UIActionSheetDelegate>
 
@@ -23,7 +35,6 @@ static NSString* const kParseDefaultChannel = @"default";
 -(BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
     // NSLog(@"applicationDidFinishLaunchingWithOptions w/ launchOptions: %@", launchOptions);
-
     [Parse setApplicationId:PARSE_APPLICATION_ID clientKey:PARSE_CLIENT_KEY];
 
     [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
@@ -35,16 +46,26 @@ static NSString* const kParseDefaultChannel = @"default";
     return YES;
 }
 
+-(void)applicationWillResignActive:(UIApplication*)application
+{
+    NSLog(@"applicationWillResignActive.");
+
+    if ([[PFInstallation currentInstallation] isDirty]) {
+        // saveInBackground will not be executed, so use save here
+        [[PFInstallation currentInstallation] save];
+    }
+}
+
 #pragma mark - Push Notification Methods
 
--(void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)newDeviceToken
+-(void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-    NSLog(@"device token: %@", newDeviceToken);
+    NSLog(@"device token: %@", deviceToken);
 
-    // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation* currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    [currentInstallation addUniqueObject:kParseDefaultChannel forKey:kParseInstallationKeyChannels];
+    DUMP_PFINSTLATION(currentInstallation);
+
+    [currentInstallation setDeviceTokenFromData:deviceToken];
     [currentInstallation saveInBackground];
 }
 
@@ -52,11 +73,15 @@ static NSString* const kParseDefaultChannel = @"default";
 {
     // NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
 
+    if (![TwitCastingUtility canOpenLive]) {
+        return;
+    }
+
     if (application.applicationState == UIApplicationStateInactive) {
         [self launchViewer];
     }
     else if (application.applicationState == UIApplicationStateActive) {
-        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"放送がはじまりました."
+        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"放送がはじまりました"
                                                                  delegate:self
                                                         cancelButtonTitle:nil
                                                    destructiveButtonTitle:nil
@@ -84,7 +109,7 @@ static NSString* const kParseDefaultChannel = @"default";
 -(void)launchViewer
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [ViewController openLive];
+            [TwitCastingUtility openLive];
         });
 }
 

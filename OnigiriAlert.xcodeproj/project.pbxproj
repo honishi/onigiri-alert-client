@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB58412818B7EC5F00C3D8FD /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58412718B7EC5F00C3D8FD /* WebViewController.m */; };
+		DB58412918B7EC5F00C3D8FD /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58412718B7EC5F00C3D8FD /* WebViewController.m */; };
+		DB58417318B9284200C3D8FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB58417218B9284200C3D8FD /* Images.xcassets */; };
+		DB58417418B9284200C3D8FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB58417218B9284200C3D8FD /* Images.xcassets */; };
+		DB58417718B9319500C3D8FD /* TwitCastingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58417618B9319500C3D8FD /* TwitCastingUtility.m */; };
+		DB58417818B9319500C3D8FD /* TwitCastingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58417618B9319500C3D8FD /* TwitCastingUtility.m */; };
 		DBC033AF18AEA05B001061D9 /* horagai.aiff in Resources */ = {isa = PBXBuildFile; fileRef = DBC033AE18AEA05B001061D9 /* horagai.aiff */; };
 		ED12144218AB2FAD008A913D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144118AB2FAD008A913D /* Parse.framework */; };
 		ED12144518AB2FDB008A913D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144418AB2FDB008A913D /* AudioToolbox.framework */; };
@@ -25,8 +31,7 @@
 		EDD7DF4E18AB201A003CDF8C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF4D18AB201A003CDF8C /* main.m */; };
 		EDD7DF5218AB201A003CDF8C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF5118AB201A003CDF8C /* AppDelegate.m */; };
 		EDD7DF5518AB201A003CDF8C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF5318AB201A003CDF8C /* Main.storyboard */; };
-		EDD7DF5818AB201A003CDF8C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF5718AB201A003CDF8C /* ViewController.m */; };
-		EDD7DF5A18AB201A003CDF8C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDD7DF5918AB201A003CDF8C /* Images.xcassets */; };
+		EDD7DF5818AB201A003CDF8C /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD7DF5718AB201A003CDF8C /* MainViewController.m */; };
 		EDD7DF6118AB201A003CDF8C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF6018AB201A003CDF8C /* XCTest.framework */; };
 		EDD7DF6218AB201A003CDF8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4118AB201A003CDF8C /* Foundation.framework */; };
 		EDD7DF6318AB201A003CDF8C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD7DF4518AB201A003CDF8C /* UIKit.framework */; };
@@ -45,6 +50,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB58412618B7EC5F00C3D8FD /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		DB58412718B7EC5F00C3D8FD /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		DB58417218B9284200C3D8FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		DB58417518B9319500C3D8FD /* TwitCastingUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitCastingUtility.h; sourceTree = "<group>"; };
+		DB58417618B9319500C3D8FD /* TwitCastingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitCastingUtility.m; sourceTree = "<group>"; };
 		DBC033AE18AEA05B001061D9 /* horagai.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = horagai.aiff; sourceTree = "<group>"; };
 		ED12144118AB2FAD008A913D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = frameworks/Parse.framework; sourceTree = "<group>"; };
 		ED12144418AB2FDB008A913D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -69,9 +79,8 @@
 		EDD7DF5018AB201A003CDF8C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EDD7DF5118AB201A003CDF8C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		EDD7DF5418AB201A003CDF8C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		EDD7DF5618AB201A003CDF8C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		EDD7DF5718AB201A003CDF8C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		EDD7DF5918AB201A003CDF8C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EDD7DF5618AB201A003CDF8C /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		EDD7DF5718AB201A003CDF8C /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		EDD7DF5F18AB201A003CDF8C /* OnigiriAlertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnigiriAlertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDD7DF6018AB201A003CDF8C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		EDD7DF6818AB201A003CDF8C /* OnigiriAlertTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OnigiriAlertTests-Info.plist"; sourceTree = "<group>"; };
@@ -158,12 +167,16 @@
 			children = (
 				ED12145618AB3112008A913D /* Credential.h */,
 				ED12145718AB31D6008A913D /* Credential.h.sample */,
+				DB58417518B9319500C3D8FD /* TwitCastingUtility.h */,
+				DB58417618B9319500C3D8FD /* TwitCastingUtility.m */,
 				EDD7DF5018AB201A003CDF8C /* AppDelegate.h */,
 				EDD7DF5118AB201A003CDF8C /* AppDelegate.m */,
 				EDD7DF5318AB201A003CDF8C /* Main.storyboard */,
-				EDD7DF5618AB201A003CDF8C /* ViewController.h */,
-				EDD7DF5718AB201A003CDF8C /* ViewController.m */,
-				EDD7DF5918AB201A003CDF8C /* Images.xcassets */,
+				EDD7DF5618AB201A003CDF8C /* MainViewController.h */,
+				EDD7DF5718AB201A003CDF8C /* MainViewController.m */,
+				DB58412618B7EC5F00C3D8FD /* WebViewController.h */,
+				DB58412718B7EC5F00C3D8FD /* WebViewController.m */,
+				DB58417218B9284200C3D8FD /* Images.xcassets */,
 				DBC033AE18AEA05B001061D9 /* horagai.aiff */,
 				EDD7DF4818AB201A003CDF8C /* Supporting Files */,
 			);
@@ -275,8 +288,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDD7DF5A18AB201A003CDF8C /* Images.xcassets in Resources */,
 				EDD7DF4C18AB201A003CDF8C /* InfoPlist.strings in Resources */,
+				DB58417318B9284200C3D8FD /* Images.xcassets in Resources */,
 				EDD7DF5518AB201A003CDF8C /* Main.storyboard in Resources */,
 				DBC033AF18AEA05B001061D9 /* horagai.aiff in Resources */,
 			);
@@ -287,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDD7DF6B18AB201A003CDF8C /* InfoPlist.strings in Resources */,
+				DB58417418B9284200C3D8FD /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,7 +311,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDD7DF5818AB201A003CDF8C /* ViewController.m in Sources */,
+				EDD7DF5818AB201A003CDF8C /* MainViewController.m in Sources */,
+				DB58412818B7EC5F00C3D8FD /* WebViewController.m in Sources */,
+				DB58417718B9319500C3D8FD /* TwitCastingUtility.m in Sources */,
 				EDD7DF5218AB201A003CDF8C /* AppDelegate.m in Sources */,
 				EDD7DF4E18AB201A003CDF8C /* main.m in Sources */,
 			);
@@ -307,6 +323,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB58417818B9319500C3D8FD /* TwitCastingUtility.m in Sources */,
+				DB58412918B7EC5F00C3D8FD /* WebViewController.m in Sources */,
 				EDD7DF6D18AB201A003CDF8C /* OnigiriAlertTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
