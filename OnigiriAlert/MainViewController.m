@@ -31,7 +31,7 @@ static NSString* const kParseInstallationKeyChannels = @"channels";
 static NSString* const kParseChannelNameDefault = @"default";
 static NSString* const kParseChannelNamePrefixTimeSlot = @"ts";
 
-static CGFloat const kBackgroundSaveFireGraceTime = 2.0f;
+static CGFloat const kBackgroundSaveFireGraceTime = 1.0f;
 
 typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
 
@@ -50,6 +50,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 @property (weak, nonatomic) IBOutlet UITableView* tableView;
 @property (strong, nonatomic) UIRefreshControl* refreshControl;
+@property (strong, nonatomic) UIActivityIndicatorView* activityIndicatorView;
 
 @property (assign, nonatomic) BOOL liveStatus;
 @property (strong, nonatomic) NSDate* liveStatusUpdateDate;
@@ -82,6 +83,10 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshStart:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:self.refreshControl];
+
+    self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIBarButtonItem* barButton = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicatorView];
+    [self navigationItem].rightBarButtonItem = barButton;
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(applicationDidBecomeActive:)
@@ -181,11 +186,13 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
             cell.textLabel.text = @"About";
             cell.detailTextLabel.text = @"";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         }
         else if (indexPath.row == 1) {
             cell.textLabel.text = @"バージョン";
             cell.detailTextLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
             cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
     }
 }
@@ -366,7 +373,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)readChannelsFromParse
 {
     self.cachedChannels = [[PFInstallation currentInstallation] channels].mutableCopy;
-    NSLog(@"cached subscriptions: %@", self.cachedChannels);
+    // NSLog(@"cached subscriptions: %@", self.cachedChannels);
 }
 
 -(void)flushCachedChannelsToParse
@@ -374,13 +381,16 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [[PFInstallation currentInstallation] setObject:self.cachedChannels forKey:kParseInstallationKeyChannels];
 
     if ([[PFInstallation currentInstallation] isDirty]) {
-        [[PFInstallation currentInstallation] saveInBackground];
+        [self.activityIndicatorView startAnimating];
+        [[PFInstallation currentInstallation] saveInBackgroundWithBlock:^(BOOL succeeded, NSError* error) {
+             [self.activityIndicatorView stopAnimating];
+         }];
     }
 }
 
 -(void)changeTimeSlotSubscription:(id)sender
 {
-    NSLog(@"value changed.");
+    // NSLog(@"value changed.");
 
     TimeSlotSubscriptionSwitch* switchView = sender;
     NSString* channelName = [self channelNameForTimeSlotWithHour:switchView.hour];
@@ -395,7 +405,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
             [self.cachedChannels removeObject:channelName];
         }
     }
-    NSLog(@"cachedChannels changed: %@", self.cachedChannels);
+    // NSLog(@"cachedChannels changed: %@", self.cachedChannels);
 
     [self reserveBackgroundSave];
 }

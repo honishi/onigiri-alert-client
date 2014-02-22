@@ -95,7 +95,7 @@
                                     <outlet property="delegate" destination="dvQ-lq-8xP" id="PFn-KK-2uP"/>
                                 </connections>
                             </webView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Fj0-6W-U8N">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Fj0-6W-U8N">
                                 <rect key="frame" x="150" y="274" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
@@ -103,6 +103,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ku6-Jd-RRt" firstAttribute="leading" secondItem="5uj-Uj-Pwr" secondAttribute="leading" id="3y3-A1-aBp"/>
+                            <constraint firstItem="Fj0-6W-U8N" firstAttribute="leading" secondItem="5uj-Uj-Pwr" secondAttribute="leading" constant="150" id="957-uw-muf"/>
+                            <constraint firstItem="Fj0-6W-U8N" firstAttribute="top" secondItem="rh3-Jf-jVh" secondAttribute="bottom" constant="210" id="9Rv-ox-hau"/>
+                            <constraint firstItem="7sy-En-0pN" firstAttribute="top" secondItem="Fj0-6W-U8N" secondAttribute="bottom" constant="230" id="CA9-Fv-zeQ"/>
+                            <constraint firstAttribute="trailing" secondItem="Fj0-6W-U8N" secondAttribute="trailing" constant="150" id="OKR-6o-4Ca"/>
                             <constraint firstItem="ku6-Jd-RRt" firstAttribute="top" secondItem="5uj-Uj-Pwr" secondAttribute="top" id="Rd6-97-652"/>
                             <constraint firstAttribute="trailing" secondItem="ku6-Jd-RRt" secondAttribute="trailing" id="cab-rO-E74"/>
                             <constraint firstAttribute="bottom" secondItem="ku6-Jd-RRt" secondAttribute="bottom" id="qrI-53-dci"/>
