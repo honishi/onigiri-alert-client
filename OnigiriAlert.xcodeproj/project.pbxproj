@@ -13,6 +13,8 @@
 		DB58417418B9284200C3D8FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB58417218B9284200C3D8FD /* Images.xcassets */; };
 		DB58417718B9319500C3D8FD /* TwitCastingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58417618B9319500C3D8FD /* TwitCastingUtility.m */; };
 		DB58417818B9319500C3D8FD /* TwitCastingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = DB58417618B9319500C3D8FD /* TwitCastingUtility.m */; };
+		DB9D546318BA4BEE003DE985 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DB9D546218BA4BEE003DE985 /* Reachability.m */; };
+		DB9D546418BA4BEE003DE985 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = DB9D546218BA4BEE003DE985 /* Reachability.m */; };
 		DBC033AF18AEA05B001061D9 /* horagai.aiff in Resources */ = {isa = PBXBuildFile; fileRef = DBC033AE18AEA05B001061D9 /* horagai.aiff */; };
 		ED12144218AB2FAD008A913D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144118AB2FAD008A913D /* Parse.framework */; };
 		ED12144518AB2FDB008A913D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED12144418AB2FDB008A913D /* AudioToolbox.framework */; };
@@ -55,6 +57,8 @@
 		DB58417218B9284200C3D8FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DB58417518B9319500C3D8FD /* TwitCastingUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitCastingUtility.h; sourceTree = "<group>"; };
 		DB58417618B9319500C3D8FD /* TwitCastingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitCastingUtility.m; sourceTree = "<group>"; };
+		DB9D546118BA4BEE003DE985 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Utilities/Reachability.h; sourceTree = "<group>"; };
+		DB9D546218BA4BEE003DE985 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Utilities/Reachability.m; sourceTree = "<group>"; };
 		DBC033AE18AEA05B001061D9 /* horagai.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = horagai.aiff; sourceTree = "<group>"; };
 		ED12144118AB2FAD008A913D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = frameworks/Parse.framework; sourceTree = "<group>"; };
 		ED12144418AB2FDB008A913D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -122,6 +126,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB9D546518BA4BF5003DE985 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DB9D546118BA4BEE003DE985 /* Reachability.h */,
+				DB9D546218BA4BEE003DE985 /* Reachability.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		EDD7DF3518AB201A003CDF8C = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +178,7 @@
 		EDD7DF4718AB201A003CDF8C /* OnigiriAlert */ = {
 			isa = PBXGroup;
 			children = (
+				DB9D546518BA4BF5003DE985 /* Utilities */,
 				ED12145618AB3112008A913D /* Credential.h */,
 				ED12145718AB31D6008A913D /* Credential.h.sample */,
 				DB58417518B9319500C3D8FD /* TwitCastingUtility.h */,
@@ -315,6 +329,7 @@
 				DB58412818B7EC5F00C3D8FD /* WebViewController.m in Sources */,
 				DB58417718B9319500C3D8FD /* TwitCastingUtility.m in Sources */,
 				EDD7DF5218AB201A003CDF8C /* AppDelegate.m in Sources */,
+				DB9D546318BA4BEE003DE985 /* Reachability.m in Sources */,
 				EDD7DF4E18AB201A003CDF8C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -325,6 +340,7 @@
 			files = (
 				DB58417818B9319500C3D8FD /* TwitCastingUtility.m in Sources */,
 				DB58412918B7EC5F00C3D8FD /* WebViewController.m in Sources */,
+				DB9D546418BA4BEE003DE985 /* Reachability.m in Sources */,
 				EDD7DF6D18AB201A003CDF8C /* OnigiriAlertTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

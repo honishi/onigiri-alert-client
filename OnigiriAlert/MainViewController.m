@@ -10,8 +10,11 @@
 #import "Credential.h"
 #import "WebViewController.h"
 #import <Parse/Parse.h>
+#import "Reachability.h"
 
 // #define DEBUG_FORCE_INITIALIZE_PARSE_INSTALLATION
+
+static NSString* const kReachabilityHostname = @"twitcasting.tv";
 
 static NSString* const kWebUrlTwitCasting = @"http://twitcasting.tv";
 
@@ -48,6 +51,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 @interface MainViewController ()<UITableViewDataSource, UITableViewDelegate>
 
+@property (assign, nonatomic) BOOL reachable;
+
 @property (weak, nonatomic) IBOutlet UITableView* tableView;
 @property (strong, nonatomic) UIRefreshControl* refreshControl;
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicatorView;
@@ -76,6 +81,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [super viewDidLoad];
 
     self.title = @"おにぎり";
+
+    [self initReachability];
 
     [self initCachedChannels];
     [self readChannelsFromParse];
@@ -182,6 +189,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
         BOOL currentSettingOn = [self.cachedChannels indexOfObject:[self channelNameForTimeSlotWithHour:indexPath.row]] != NSNotFound;
         [switchView setOn:currentSettingOn animated:animated];
+        switchView.enabled = self.reachable;
 
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -267,6 +275,34 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 #pragma mark - Internal Methods
 
+-(void)initReachability
+{
+    Reachability* reach = [Reachability reachabilityWithHostname:kReachabilityHostname];
+
+    __weak MainViewController* weakSelf = self;
+    reach.reachableBlock = ^(Reachability* reach)
+    {
+        // NSLog(@"REACHABLE.");
+        weakSelf.reachable = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf updateVisibleCells];
+        });
+    };
+
+    reach.unreachableBlock = ^(Reachability* reach)
+    {
+        // NSLog(@"UNREACHABLE.");
+        weakSelf.reachable = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf updateVisibleCells];
+        });
+    };
+
+    [reach startNotifier];
+}
+
+#pragma mark Updater
+
 -(void)updateLiveStatus
 {
     NSString* urlString = [NSString stringWithFormat:@"%@%@?type=json&user=%@", kTwitCastingApiUrl, kTwitCastingApiPathLiveStatus, TARGET_USER];
@@ -274,6 +310,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
 
     asyncRequestCompletionBlock requestCompletion = ^(NSURLResponse* response, NSData* data, NSError* error) {
+        [self.refreshControl endRefreshing];
+
         self.liveStatusUpdateDate = [NSDate date];
 
         if (error) {
@@ -294,7 +332,6 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         self.liveStatus = 0 < [isLive intValue];
 
         [self updateVisibleCells];
-        [self.refreshControl endRefreshing];
     };
 
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
@@ -320,6 +357,11 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(void)refreshStart:(id)sender
 {
+    if (!self.reachable) {
+        [self.refreshControl endRefreshing];
+        return;
+    }
+
     [self.refreshControl beginRefreshing];
 
     [self updateLiveStatus];
