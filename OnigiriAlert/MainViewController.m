@@ -313,6 +313,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)applicationDidBecomeActive:(NSNotification*)notification
 {
     [self updateLiveStatus];
+    [self updateSetting];
 }
 
 #pragma mark Refresh control
