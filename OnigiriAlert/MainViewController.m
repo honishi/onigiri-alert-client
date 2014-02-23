@@ -105,7 +105,9 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+
     [self updateLiveStatus];
+    [self updateSetting];
 }
 
 -(void)didReceiveMemoryWarning
@@ -147,12 +149,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         }
     }
 
-    [self updateCell:cell atIndexPath:indexPath];
+    [self updateCell:cell atIndexPath:indexPath animated:NO];
 
     return cell;
 }
 
--(void)updateCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
+-(void)updateCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated
 {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
@@ -176,8 +178,10 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     }
     else if (indexPath.section == 1) {
         cell.textLabel.text = [NSString stringWithFormat:@"%02d:00-", indexPath.row];
+
         TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
-        switchView.on = [self.cachedChannels indexOfObject:[self channelNameForTimeSlotWithHour:indexPath.row]] != NSNotFound;
+        BOOL currentSettingOn = [self.cachedChannels indexOfObject:[self channelNameForTimeSlotWithHour:indexPath.row]] != NSNotFound;
+        [switchView setOn:currentSettingOn animated:animated];
 
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -200,7 +204,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)updateVisibleCells
 {
     for (UITableViewCell* cell in self.tableView.visibleCells) {
-        [self updateCell:cell atIndexPath:[self.tableView indexPathForCell:cell]];
+        [self updateCell:cell atIndexPath:[self.tableView indexPathForCell:cell] animated:YES];
     }
 }
 
@@ -296,6 +300,14 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [NSURLConnection sendAsynchronousRequest:request queue:NSOperationQueue.mainQueue completionHandler:requestCompletion];
 }
 
+-(void)updateSetting
+{
+    [[PFInstallation currentInstallation] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        [self readChannelsFromParse];
+        [self updateVisibleCells];
+    }];
+}
+
 #pragma mark Notification hander
 
 -(void)applicationDidBecomeActive:(NSNotification*)notification
@@ -308,7 +320,9 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(void)refreshStart:(id)sender
 {
     [self.refreshControl beginRefreshing];
+
     [self updateLiveStatus];
+    [self updateSetting];
 }
 
 #pragma mark Segue
@@ -355,7 +369,9 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         self.cachedChannels = NSMutableArray.new;
     }
 
-    if ([self isFirstLaunch]) {
+    BOOL isFirstLaunch = ([PFInstallation currentInstallation].objectId == nil);
+
+    if (isFirstLaunch) {
         [self.cachedChannels addObject:kParseChannelNameDefault];
         for (NSInteger hour = 0; hour < 24; hour++) {
             [self.cachedChannels addObject:[self channelNameForTimeSlotWithHour:hour]];
@@ -363,11 +379,6 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
         [self flushCachedChannelsToParse];
     }
-}
-
--(BOOL)isFirstLaunch
-{
-    return ([PFInstallation currentInstallation].objectId == nil);
 }
 
 -(void)readChannelsFromParse
