@@ -81,7 +81,7 @@
         [self launchViewer];
     }
     else if (application.applicationState == UIApplicationStateActive) {
-        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"放送がはじまりました"
+        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"配信がはじまりました"
                                                                  delegate:self
                                                         cancelButtonTitle:nil
                                                    destructiveButtonTitle:nil

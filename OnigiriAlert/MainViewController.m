@@ -165,13 +165,13 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            cell.textLabel.text = @"放送状況";
+            cell.textLabel.text = @"配信";
             if (self.liveStatus) {
-                cell.detailTextLabel.text = @"放送中のようです";
+                cell.detailTextLabel.text = @"配信中のようです";
                 cell.detailTextLabel.textColor = [UIColor redColor];
             }
             else {
-                cell.detailTextLabel.text = @"放送してないようです";
+                cell.detailTextLabel.text = @"配信してないようです";
                 cell.detailTextLabel.textColor = [UIColor grayColor];
             }
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -245,7 +245,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     NSString* title = @"";
 
     if (section == 0) {
-        title = @"放送状況";
+        title = @"配信状況";
     }
     else if (section == 1) {
         title = @"通知設定";
