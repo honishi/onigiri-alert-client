@@ -360,6 +360,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(void)updateSetting
 {
+    // NSLog(@"currentInstallation.isDirty: %d", [PFInstallation currentInstallation].isDirty);
+    if ([PFInstallation currentInstallation].isDirty) {
+        NSLog(@"there is dirty data in currentInstallation. so skipped refresh.");
+        return;
+    }
+    
     [[PFInstallation currentInstallation] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         [self readChannelsFromParse];
         [self updateVisibleCells];
