@@ -73,25 +73,32 @@
 {
     // NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
 
-    if (![TwitCastingUtility canOpenLive]) {
-        return;
-    }
-
     if (application.applicationState == UIApplicationStateInactive) {
         [self launchViewer];
     }
     else if (application.applicationState == UIApplicationStateActive) {
-        UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@"配信がはじまりました"
-                                                                 delegate:self
-                                                        cancelButtonTitle:nil
-                                                   destructiveButtonTitle:nil
-                                                        otherButtonTitles:nil];
-        [actionSheet addButtonWithTitle:@"見る"];
-        [actionSheet addButtonWithTitle:@"キャンセル"];
-        actionSheet.cancelButtonIndex = actionSheet.numberOfButtons-1;
+        NSString* title = @"配信がはじまりました";
+        if ([TwitCastingUtility canOpenLive]) {
+            UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:title
+                                                                     delegate:self
+                                                            cancelButtonTitle:nil
+                                                       destructiveButtonTitle:nil
+                                                            otherButtonTitles:nil];
+            [actionSheet addButtonWithTitle:@"見る"];
+            [actionSheet addButtonWithTitle:@"キャンセル"];
+            actionSheet.cancelButtonIndex = actionSheet.numberOfButtons-1;
 
-        UIView* mainView = self.window.rootViewController.view;
-        [actionSheet showInView:mainView];
+            UIView* mainView = self.window.rootViewController.view;
+            [actionSheet showInView:mainView];
+        }
+        else {
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                                message:title
+                                                               delegate:nil
+                                                      cancelButtonTitle:nil
+                                                      otherButtonTitles:@"はい", nil];
+            [alertView show];
+        }
     }
 }
 
@@ -108,6 +115,10 @@
 
 -(void)launchViewer
 {
+    if (![TwitCastingUtility canOpenLive]) {
+        return;
+    }
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [TwitCastingUtility openLive];
         });
