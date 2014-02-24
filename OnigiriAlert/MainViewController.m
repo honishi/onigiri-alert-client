@@ -17,7 +17,6 @@
 static NSString* const kReachabilityHostname = @"twitcasting.tv";
 
 static NSString* const kWebUrlTwitCasting = @"http://twitcasting.tv";
-
 static NSString* const kTwitCastingApiUrl = @"http://api.twitcasting.tv";
 static NSString* const kTwitCastingApiPathLiveStatus = @"/api/livestatus";
 
@@ -27,13 +26,11 @@ static NSString* const kSegueIdentifierShowWeb = @"showWeb";
 
 static NSString* kCellReuseIdentifierStatus = @"StatusCell";
 static NSString* kCellReuseIdentifierSetting = @"SettingCell";
-static NSString* kCellReuseIdentifierAbout = @"AboutCell";
+static NSString* kCellReuseIdentifierAppInfo = @"AppInfoCell";
 
-// for parse
 static NSString* const kParseInstallationKeyChannels = @"channels";
 static NSString* const kParseChannelNameDefault = @"default";
 static NSString* const kParseChannelNamePrefixTimeSlot = @"ts";
-
 static CGFloat const kBackgroundSaveFireGraceTime = 1.0f;
 
 typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
@@ -122,105 +119,37 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark Segue
+
+-(void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:kSegueIdentifierShowWeb]) {
+        WebViewController* webViewController = [segue destinationViewController];
+        NSURL* url = nil;
+        BOOL useToolbar = YES;
+        NSIndexPath* indexPath = [self.tableView indexPathForSelectedRow];
+
+        if (indexPath.section == 0 && indexPath.row == 0) {
+            NSString* urlString = [NSString stringWithFormat:@"%@/%@", kWebUrlTwitCasting, TARGET_USER];
+            url = [NSURL URLWithString:urlString];
+        }
+        else if (indexPath.section == 2 && indexPath.row == 0) {
+            url = [NSURL URLWithString:APP_ABOUT_SITE_URL];
+            useToolbar = NO;
+        }
+
+        webViewController.url = url;
+        webViewController.useToolbar = useToolbar;
+    }
+}
+
 #pragma mark - UITableViewDataSource Methods
 
--(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    UITableViewCell* cell = nil;
-
-    if (indexPath.section == 0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierStatus];
-
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellReuseIdentifierStatus];
-        }
-    }
-    else if (indexPath.section == 1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierSetting];
-
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierSetting];
-            TimeSlotSubscriptionSwitch* switchView = [[TimeSlotSubscriptionSwitch alloc] initWithFrame:CGRectZero];
-            [switchView addTarget:self action:@selector(changeTimeSlotSubscription:) forControlEvents:UIControlEventValueChanged];
-            cell.accessoryView = switchView;
-        }
-
-        TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
-        switchView.hour = indexPath.row;
-    }
-    else if (indexPath.section == 2) {
-        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierAbout];
-
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellReuseIdentifierAbout];
-        }
-    }
-
-    [self updateCell:cell atIndexPath:indexPath animated:NO];
-
-    return cell;
-}
-
--(void)updateCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated
-{
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            cell.textLabel.text = @"配信";
-            if (self.liveStatus) {
-                cell.detailTextLabel.text = @"配信中のようです";
-                cell.detailTextLabel.textColor = [UIColor redColor];
-            }
-            else {
-                cell.detailTextLabel.text = @"配信してないようです";
-                cell.detailTextLabel.textColor = [UIColor grayColor];
-            }
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        }
-        else if (indexPath.row == 1) {
-            cell.textLabel.text = @"更新日時";
-            cell.detailTextLabel.text = [self dateStringForDate:self.liveStatusUpdateDate];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
-    }
-    else if (indexPath.section == 1) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%02d:00-", indexPath.row];
-
-        TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
-        BOOL currentSettingOn = [self.cachedChannels indexOfObject:[self channelNameForTimeSlotWithHour:indexPath.row]] != NSNotFound;
-        [switchView setOn:currentSettingOn animated:animated];
-        switchView.enabled = self.reachable;
-
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    else if (indexPath.section == 2) {
-        if (indexPath.row == 0) {
-            cell.textLabel.text = @"About";
-            cell.detailTextLabel.text = @"";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        }
-        else if (indexPath.row == 1) {
-            cell.textLabel.text = @"バージョン";
-            cell.detailTextLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
-    }
-}
-
--(void)updateVisibleCells
-{
-    for (UITableViewCell* cell in self.tableView.visibleCells) {
-        [self updateCell:cell atIndexPath:[self.tableView indexPathForCell:cell] animated:YES];
-    }
-}
-
-#pragma mark Misc
+#pragma mark Tableview outline
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return 3;
+    return 3;   // status, setting, app info
 }
 
 -(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
@@ -257,21 +186,112 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     return title;
 }
 
+#pragma mark Cell
+
+-(UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    UITableViewCell* cell = nil;
+
+    if (indexPath.section == 0) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierStatus];
+
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellReuseIdentifierStatus];
+        }
+    }
+    else if (indexPath.section == 1) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierSetting];
+
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierSetting];
+            TimeSlotSubscriptionSwitch* switchView = [[TimeSlotSubscriptionSwitch alloc] initWithFrame:CGRectZero];
+            [switchView addTarget:self action:@selector(changeTimeSlotSubscription:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = switchView;
+        }
+    }
+    else if (indexPath.section == 2) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierAppInfo];
+
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellReuseIdentifierAppInfo];
+        }
+    }
+
+    [self updateCell:cell atIndexPath:indexPath animated:NO];
+
+    return cell;
+}
+
+#pragma mark Cell updater
+
+-(void)updateCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated
+{
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            cell.textLabel.text = @"配信";
+            if (self.liveStatus) {
+                cell.detailTextLabel.text = @"配信中のようです";
+                cell.detailTextLabel.textColor = [UIColor redColor];
+            }
+            else {
+                cell.detailTextLabel.text = @"配信してないようです";
+                cell.detailTextLabel.textColor = [UIColor grayColor];
+            }
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        }
+        else if (indexPath.row == 1) {
+            cell.textLabel.text = @"更新日時";
+            cell.detailTextLabel.text = [self dateStringForDate:self.liveStatusUpdateDate];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+    }
+    else if (indexPath.section == 1) {
+        cell.textLabel.text = [NSString stringWithFormat:@"%02d:00-", indexPath.row];
+
+        TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
+        switchView.hour = indexPath.row;
+
+        BOOL currentSettingOn = [self.cachedChannels indexOfObject:[self channelNameForTimeSlotWithHour:indexPath.row]] != NSNotFound;
+        [switchView setOn:currentSettingOn animated:animated];
+        switchView.enabled = self.reachable;
+
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    else if (indexPath.section == 2) {
+        if (indexPath.row == 0) {
+            cell.textLabel.text = @"About";
+            cell.detailTextLabel.text = @"";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        }
+        else if (indexPath.row == 1) {
+            cell.textLabel.text = @"バージョン";
+            cell.detailTextLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleVersionKey];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+    }
+}
+
+-(void)updateVisibleCells
+{
+    for (UITableViewCell* cell in self.tableView.visibleCells) {
+        [self updateCell:cell atIndexPath:[self.tableView indexPathForCell:cell] animated:YES];
+    }
+}
+
 #pragma mark - UITableViewDelegate Methods
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        [self performSegueWithIdentifier:kSegueIdentifierShowWeb sender:self];
-    }
-    else if (indexPath.section == 2 && indexPath.row == 0) {
+    if ((indexPath.section == 0 && indexPath.row == 0) || (indexPath.section == 2 && indexPath.row == 0)) {
         [self performSegueWithIdentifier:kSegueIdentifierShowWeb sender:self];
     }
 
+    // do not call deselectRowAtIndexPath at the top in this method, cause indexPathForSelectedRow is used in prepareForSegue
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-// #pragma mark - Public Interface
 
 #pragma mark - Internal Methods
 
@@ -284,6 +304,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     {
         // NSLog(@"REACHABLE.");
         weakSelf.reachable = YES;
+        // force to use main thread to update ui
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf updateVisibleCells];
         });
@@ -301,7 +322,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [reach startNotifier];
 }
 
-#pragma mark Updater
+#pragma mark View updater
 
 -(void)updateLiveStatus
 {
@@ -357,54 +378,18 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(void)refreshStart:(id)sender
 {
+    [self.refreshControl beginRefreshing];
+
     if (!self.reachable) {
         [self.refreshControl endRefreshing];
         return;
     }
 
-    [self.refreshControl beginRefreshing];
-
     [self updateLiveStatus];
     [self updateSetting];
 }
 
-#pragma mark Segue
-
--(void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:kSegueIdentifierShowWeb]) {
-        WebViewController* webViewController = [segue destinationViewController];
-        NSURL* url = nil;
-        BOOL useToolbar = YES;
-        NSIndexPath* indexPath = [self.tableView indexPathForSelectedRow];
-
-        if (indexPath.section == 0 && indexPath.row == 0) {
-            NSString* urlString = [NSString stringWithFormat:@"%@/%@", kWebUrlTwitCasting, TARGET_USER];
-            url = [NSURL URLWithString:urlString];
-        }
-        else if (indexPath.section == 2 && indexPath.row == 0) {
-            url = [NSURL URLWithString:APP_ABOUT_SITE_URL];
-            useToolbar = NO;
-        }
-
-        webViewController.url = url;
-        webViewController.useToolbar = useToolbar;
-    }
-}
-
-#pragma mark Misc utilities
-
--(NSString*)dateStringForDate:(NSDate*)date
-{
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-
-    return [dateFormatter stringFromDate:[NSDate date]];
-}
-
-#pragma mark - Parse utilities
-
-#pragma mark Cached channels
+#pragma mark - Parse & Cached channels utilities
 
 -(void)initCachedChannels
 {
@@ -493,6 +478,16 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 -(NSString*)channelNameForTimeSlotWithHour:(NSInteger)hour
 {
     return [NSString stringWithFormat:@"%@%02d", kParseChannelNamePrefixTimeSlot, hour];
+}
+
+#pragma mark - Misc utilities
+
+-(NSString*)dateStringForDate:(NSDate*)date
+{
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+
+    return [dateFormatter stringFromDate:[NSDate date]];
 }
 
 @end
