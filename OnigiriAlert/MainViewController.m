@@ -25,7 +25,8 @@ static CGFloat const kStatusUpdateTimerInterval = 10.0f;
 static NSString* const kSegueIdentifierShowWeb = @"showWeb";
 
 static NSString* kCellReuseIdentifierStatus = @"StatusCell";
-static NSString* kCellReuseIdentifierSetting = @"SettingCell";
+static NSString* kCellReuseIdentifierOption = @"OptionCell";
+static NSString* kCellReuseIdentifierTimeSlot = @"TimeSlotCell";
 static NSString* kCellReuseIdentifierAppInfo = @"AppInfoCell";
 
 static NSString* const kParseInstallationKeyChannels = @"channels";
@@ -36,6 +37,13 @@ static CGFloat const kBackgroundSaveFireGraceTime = 1.0f;
 typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
 
 #pragma mark - Utililty
+
+@interface SubTargetUserSwitch : UISwitch
+@property (strong, nonatomic) NSString* targetUser;
+@end
+
+@implementation SubTargetUserSwitch
+@end
 
 @interface TimeSlotSubscriptionSwitch : UISwitch
 @property (assign, nonatomic) NSInteger hour;
@@ -58,6 +66,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 @property (strong, nonatomic) NSDate* liveStatusUpdateDate;
 
 @property (strong, nonatomic) NSMutableArray* cachedChannels;
+@property (strong, nonatomic) NSMutableDictionary* cachedSubTargetUser;
 @property (strong, nonatomic) NSTimer* backgroundSaveTriggerTimer;
 
 @end
@@ -81,8 +90,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
     [self initReachability];
 
-    [self initCachedChannels];
-    [self readChannelsFromParse];
+    [self initCachedInstallation];
+    [self readInstallationFromParse];
 
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(refreshStart:) forControlEvents:UIControlEventValueChanged];
@@ -130,10 +139,10 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         NSIndexPath* indexPath = [self.tableView indexPathForSelectedRow];
 
         if (indexPath.section == 0 && indexPath.row == 0) {
-            NSString* urlString = [NSString stringWithFormat:@"%@/%@", kWebUrlTwitCasting, TARGET_USER];
+            NSString* urlString = [NSString stringWithFormat:@"%@/%@", kWebUrlTwitCasting, MAIN_TARGET_USER];
             url = [NSURL URLWithString:urlString];
         }
-        else if (indexPath.section == 2 && indexPath.row == 0) {
+        else if (indexPath.section == 3 && indexPath.row == 0) {
             url = [NSURL URLWithString:APP_ABOUT_SITE_URL];
             useToolbar = NO;
         }
@@ -149,7 +158,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return 3;   // status, setting, app info
+    return 4;   // status, option, time slot, app info
 }
 
 -(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
@@ -160,9 +169,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         numberOfRows = 2;
     }
     else if (section == 1) {
-        numberOfRows = 24;  // = a day
+        numberOfRows = [SUB_TARGET_USERS componentsSeparatedByString:@","].count;
     }
     else if (section == 2) {
+        numberOfRows = 24;  // = a day
+    }
+    else if (section == 3) {
         numberOfRows = 2;
     }
 
@@ -177,9 +189,12 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         title = @"配信状況";
     }
     else if (section == 1) {
-        title = @"通知設定";
+        title = @"オプション";
     }
     else if (section == 2) {
+        title = @"通知時間";
+    }
+    else if (section == 3) {
         title = @"アプリケーション情報";
     }
 
@@ -200,16 +215,26 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         }
     }
     else if (indexPath.section == 1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierSetting];
+        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierOption];
 
         if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierSetting];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierOption];
+            SubTargetUserSwitch* switchView = [[SubTargetUserSwitch alloc] initWithFrame:CGRectZero];
+            [switchView addTarget:self action:@selector(changeSubTargetUser:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = switchView;
+        }
+    }
+    else if (indexPath.section == 2) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierTimeSlot];
+
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierTimeSlot];
             TimeSlotSubscriptionSwitch* switchView = [[TimeSlotSubscriptionSwitch alloc] initWithFrame:CGRectZero];
             [switchView addTarget:self action:@selector(changeTimeSlotSubscription:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchView;
         }
     }
-    else if (indexPath.section == 2) {
+    else if (indexPath.section == 3) {
         cell = [tableView dequeueReusableCellWithIdentifier:kCellReuseIdentifierAppInfo];
 
         if (!cell) {
@@ -247,6 +272,20 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         }
     }
     else if (indexPath.section == 1) {
+        NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
+        NSString* targetUser = subTargetUsers[indexPath.row];
+        cell.textLabel.text = targetUser;
+
+        SubTargetUserSwitch* switchView = (SubTargetUserSwitch*)cell.accessoryView;
+        switchView.targetUser = targetUser;
+
+        BOOL currentSettingOn = [(NSNumber*)self.cachedSubTargetUser[targetUser] boolValue];
+        [switchView setOn:currentSettingOn animated:animated];
+        switchView.enabled = self.reachable;
+
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    else if (indexPath.section == 2) {
         cell.textLabel.text = [NSString stringWithFormat:@"%02d:00-", indexPath.row];
 
         TimeSlotSubscriptionSwitch* switchView = (TimeSlotSubscriptionSwitch*)cell.accessoryView;
@@ -258,7 +297,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    else if (indexPath.section == 2) {
+    else if (indexPath.section == 3) {
         if (indexPath.row == 0) {
             cell.textLabel.text = @"About";
             cell.detailTextLabel.text = @"";
@@ -285,7 +324,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if ((indexPath.section == 0 && indexPath.row == 0) || (indexPath.section == 2 && indexPath.row == 0)) {
+    if ((indexPath.section == 0 && indexPath.row == 0) || (indexPath.section == 3 && indexPath.row == 0)) {
         [self performSegueWithIdentifier:kSegueIdentifierShowWeb sender:self];
     }
 
@@ -326,7 +365,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 -(void)updateLiveStatus
 {
-    NSString* urlString = [NSString stringWithFormat:@"%@%@?type=json&user=%@", kTwitCastingApiUrl, kTwitCastingApiPathLiveStatus, TARGET_USER];
+    NSString* urlString = [NSString stringWithFormat:@"%@%@?type=json&user=%@", kTwitCastingApiUrl, kTwitCastingApiPathLiveStatus, MAIN_TARGET_USER];
     NSURL* url = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
 
@@ -367,7 +406,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     }
     
     [[PFInstallation currentInstallation] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-        [self readChannelsFromParse];
+        [self readInstallationFromParse];
         [self updateVisibleCells];
     }];
 }
@@ -397,10 +436,19 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
 #pragma mark - Parse & Cached channels utilities
 
--(void)initCachedChannels
+-(void)initCachedInstallation
 {
     if (!self.cachedChannels) {
         self.cachedChannels = NSMutableArray.new;
+    }
+
+    if (!self.cachedSubTargetUser) {
+        self.cachedSubTargetUser = NSMutableDictionary.new;
+
+        NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
+        for (NSString* subTargetUser in subTargetUsers) {
+            self.cachedSubTargetUser[subTargetUser] = @NO;
+        }
     }
 
     BOOL isFirstLaunch = ([PFInstallation currentInstallation].objectId == nil);
@@ -411,19 +459,34 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
             [self.cachedChannels addObject:[self channelNameForTimeSlotWithHour:hour]];
         }
 
-        [self flushCachedChannelsToParse];
+        [self flushCachedInstallationToParse];
     }
 }
 
--(void)readChannelsFromParse
+-(void)readInstallationFromParse
 {
     self.cachedChannels = [[PFInstallation currentInstallation] channels].mutableCopy;
-    // NSLog(@"cached subscriptions: %@", self.cachedChannels);
+    // NSLog(@"cached channels: %@", self.cachedChannels);
+
+    NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
+
+    for (NSString* subTargetUser in subTargetUsers) {
+        NSNumber* subscribed = [[PFInstallation currentInstallation] valueForKey:subTargetUser];
+        if (!subscribed) {
+            subscribed = @NO;
+        }
+        self.cachedSubTargetUser[subTargetUser] = subscribed;    // TODO: copy?
+    }
+    // NSLog(@"cached sub user subscriptions: %@", self.cachedSubTargetUser);
 }
 
--(void)flushCachedChannelsToParse
+-(void)flushCachedInstallationToParse
 {
     [[PFInstallation currentInstallation] setObject:self.cachedChannels forKey:kParseInstallationKeyChannels];
+
+    for (NSString* key in self.cachedSubTargetUser.keyEnumerator) {
+        [[PFInstallation currentInstallation] setObject:self.cachedSubTargetUser[key] forKey:key];
+    }
 
     if ([[PFInstallation currentInstallation] isDirty]) {
         [self.activityIndicatorView startAnimating];
@@ -431,6 +494,21 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
              [self.activityIndicatorView stopAnimating];
          }];
     }
+}
+
+-(void)changeSubTargetUser:(id)sender
+{
+    SubTargetUserSwitch* switchView = sender;
+
+    if (switchView.on) {
+        self.cachedSubTargetUser[switchView.targetUser] = @YES;
+    }
+    else {
+        self.cachedSubTargetUser[switchView.targetUser] = @NO;
+    }
+    // NSLog(@"cachedSubUsersSubscription changed: %@", self.cachedSubTargetUser);
+
+    [self reserveBackgroundSave];
 }
 
 -(void)changeTimeSlotSubscription:(id)sender
@@ -476,7 +554,7 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     [self.backgroundSaveTriggerTimer invalidate];
     self.backgroundSaveTriggerTimer = nil;
 
-    [self flushCachedChannelsToParse];
+    [self flushCachedInstallationToParse];
 }
 
 #pragma mark utility

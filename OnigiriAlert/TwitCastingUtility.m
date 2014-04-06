@@ -31,7 +31,7 @@ static NSString* const kTwitCastingUrlSchemeOpenLive = @"tcviewer://live/";
 
 +(NSURL*)urlForLive
 {
-    NSString* urlSchemeString = [kTwitCastingUrlSchemeOpenLive stringByAppendingString:TARGET_USER];
+    NSString* urlSchemeString = [kTwitCastingUrlSchemeOpenLive stringByAppendingString:MAIN_TARGET_USER];
     return [NSURL URLWithString:urlSchemeString];
 }
 
