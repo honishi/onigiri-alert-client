@@ -69,6 +69,7 @@
     [currentInstallation saveInBackground];
 }
 
+// TODO: handle notification for sub users, not main user
 -(void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
     // NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
