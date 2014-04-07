@@ -32,17 +32,19 @@ static NSString* kCellReuseIdentifierAppInfo = @"AppInfoCell";
 static NSString* const kParseInstallationKeyChannels = @"channels";
 static NSString* const kParseChannelNameDefault = @"default";
 static NSString* const kParseChannelNamePrefixTimeSlot = @"ts";
+static NSString* const kParseInstallationKeySubChannels = @"subChannels";
+
 static CGFloat const kBackgroundSaveFireGraceTime = 1.0f;
 
 typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* data, NSError* error);
 
 #pragma mark - Utililty
 
-@interface SubTargetUserSwitch : UISwitch
-@property (strong, nonatomic) NSString* targetUser;
+@interface SubChannelSubscriptionSwitch : UISwitch
+@property (strong, nonatomic) NSString* userName;
 @end
 
-@implementation SubTargetUserSwitch
+@implementation SubChannelSubscriptionSwitch
 @end
 
 @interface TimeSlotSubscriptionSwitch : UISwitch
@@ -65,8 +67,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 @property (assign, nonatomic) BOOL liveStatus;
 @property (strong, nonatomic) NSDate* liveStatusUpdateDate;
 
-@property (strong, nonatomic) NSMutableArray* cachedChannels;
-@property (strong, nonatomic) NSMutableDictionary* cachedSubTargetUser;
+@property (strong, nonatomic) NSMutableArray* cachedChannels;       // for time slot
+@property (strong, nonatomic) NSMutableArray* cachedSubChannels;    // for sub user
 @property (strong, nonatomic) NSTimer* backgroundSaveTriggerTimer;
 
 @end
@@ -219,8 +221,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
 
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellReuseIdentifierOption];
-            SubTargetUserSwitch* switchView = [[SubTargetUserSwitch alloc] initWithFrame:CGRectZero];
-            [switchView addTarget:self action:@selector(changeSubTargetUser:) forControlEvents:UIControlEventValueChanged];
+            SubChannelSubscriptionSwitch* switchView = [[SubChannelSubscriptionSwitch alloc] initWithFrame:CGRectZero];
+            [switchView addTarget:self action:@selector(changeSubChannel:) forControlEvents:UIControlEventValueChanged];
             cell.accessoryView = switchView;
         }
     }
@@ -272,14 +274,14 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         }
     }
     else if (indexPath.section == 1) {
-        NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
-        NSString* targetUser = subTargetUsers[indexPath.row];
+        NSArray* subChannels = [SUB_TARGET_USERS componentsSeparatedByString:@","];
+        NSString* targetUser = subChannels[indexPath.row];
         cell.textLabel.text = targetUser;
 
-        SubTargetUserSwitch* switchView = (SubTargetUserSwitch*)cell.accessoryView;
-        switchView.targetUser = targetUser;
+        SubChannelSubscriptionSwitch* switchView = (SubChannelSubscriptionSwitch*)cell.accessoryView;
+        switchView.userName = targetUser;
 
-        BOOL currentSettingOn = [(NSNumber*)self.cachedSubTargetUser[targetUser] boolValue];
+        BOOL currentSettingOn = [self.cachedSubChannels indexOfObject:targetUser] != NSNotFound;
         [switchView setOn:currentSettingOn animated:animated];
         switchView.enabled = self.reachable;
 
@@ -442,13 +444,8 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
         self.cachedChannels = NSMutableArray.new;
     }
 
-    if (!self.cachedSubTargetUser) {
-        self.cachedSubTargetUser = NSMutableDictionary.new;
-
-        NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
-        for (NSString* subTargetUser in subTargetUsers) {
-            self.cachedSubTargetUser[subTargetUser] = @NO;
-        }
+    if (!self.cachedSubChannels) {
+        self.cachedSubChannels = NSMutableArray.new;
     }
 
     BOOL isFirstLaunch = ([PFInstallation currentInstallation].objectId == nil);
@@ -468,25 +465,15 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     self.cachedChannels = [[PFInstallation currentInstallation] channels].mutableCopy;
     // NSLog(@"cached channels: %@", self.cachedChannels);
 
-    NSArray* subTargetUsers = [SUB_TARGET_USERS componentsSeparatedByString:@","];
-
-    for (NSString* subTargetUser in subTargetUsers) {
-        NSNumber* subscribed = [[PFInstallation currentInstallation] valueForKey:subTargetUser];
-        if (!subscribed) {
-            subscribed = @NO;
-        }
-        self.cachedSubTargetUser[subTargetUser] = subscribed;    // TODO: copy?
-    }
-    // NSLog(@"cached sub user subscriptions: %@", self.cachedSubTargetUser);
+    NSArray* subChannels = [[PFInstallation currentInstallation] objectForKey:kParseInstallationKeySubChannels];
+    self.cachedSubChannels = subChannels.mutableCopy;
+    // NSLog(@"cached sub channels: %@", self.cachedSubChannels);
 }
 
 -(void)flushCachedInstallationToParse
 {
     [[PFInstallation currentInstallation] setObject:self.cachedChannels forKey:kParseInstallationKeyChannels];
-
-    for (NSString* key in self.cachedSubTargetUser.keyEnumerator) {
-        [[PFInstallation currentInstallation] setObject:self.cachedSubTargetUser[key] forKey:key];
-    }
+    [[PFInstallation currentInstallation] setObject:self.cachedSubChannels forKey:kParseInstallationKeySubChannels];
 
     if ([[PFInstallation currentInstallation] isDirty]) {
         [self.activityIndicatorView startAnimating];
@@ -496,17 +483,22 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     }
 }
 
--(void)changeSubTargetUser:(id)sender
+-(void)changeSubChannel:(id)sender
 {
-    SubTargetUserSwitch* switchView = sender;
+    SubChannelSubscriptionSwitch* switchView = sender;
+    NSString* subChannelName = switchView.userName;
 
     if (switchView.on) {
-        self.cachedSubTargetUser[switchView.targetUser] = @YES;
+        if ([self.cachedSubChannels indexOfObject:subChannelName] == NSNotFound) {
+            [self.cachedSubChannels addObject:subChannelName];
+        }
     }
     else {
-        self.cachedSubTargetUser[switchView.targetUser] = @NO;
+        if ([self.cachedSubChannels indexOfObject:subChannelName] != NSNotFound) {
+            [self.cachedSubChannels removeObject:subChannelName];
+        }
     }
-    // NSLog(@"cachedSubUsersSubscription changed: %@", self.cachedSubTargetUser);
+    NSLog(@"cachedSubChannels changed: %@", self.cachedSubChannels);
 
     [self reserveBackgroundSave];
 }
