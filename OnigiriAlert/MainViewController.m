@@ -466,7 +466,9 @@ typedef void (^ asyncRequestCompletionBlock)(NSURLResponse* response, NSData* da
     // NSLog(@"cached channels: %@", self.cachedChannels);
 
     NSArray* subChannels = [[PFInstallation currentInstallation] objectForKey:kParseInstallationKeySubChannels];
-    self.cachedSubChannels = subChannels.mutableCopy;
+    if (subChannels) {
+        self.cachedSubChannels = subChannels.mutableCopy;
+    }
     // NSLog(@"cached sub channels: %@", self.cachedSubChannels);
 }
 
