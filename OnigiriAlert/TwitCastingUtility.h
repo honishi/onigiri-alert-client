@@ -11,6 +11,6 @@
 @interface TwitCastingUtility : NSObject
 
 +(BOOL)canOpenLive;
-+(void)openLive;
++(void)openLiveWithUsername:(NSString*)username;
 
 @end

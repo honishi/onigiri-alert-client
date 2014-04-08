@@ -17,22 +17,21 @@ static NSString* const kTwitCastingUrlSchemeOpenLive = @"tcviewer://live/";
 
 +(BOOL)canOpenLive
 {
-    return [[UIApplication sharedApplication] canOpenURL:[TwitCastingUtility urlForLive]];
+    return [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:kTwitCastingUrlSchemeOpenLive]];
 }
 
-+(void)openLive
++(void)openLiveWithUsername:(NSString*)username
 {
     if ([TwitCastingUtility canOpenLive]) {
-        [[UIApplication sharedApplication] openURL:[TwitCastingUtility urlForLive]];
+        if (!username) {
+            username = MAIN_TARGET_USER;
+        }
+
+        NSString* urlSchemeString = [kTwitCastingUrlSchemeOpenLive stringByAppendingString:username];
+        NSURL* url = [NSURL URLWithString:urlSchemeString];
+
+        [[UIApplication sharedApplication] openURL:url];
     }
-}
-
-#pragma mark - Internal Methods
-
-+(NSURL*)urlForLive
-{
-    NSString* urlSchemeString = [kTwitCastingUrlSchemeOpenLive stringByAppendingString:MAIN_TARGET_USER];
-    return [NSURL URLWithString:urlSchemeString];
 }
 
 @end

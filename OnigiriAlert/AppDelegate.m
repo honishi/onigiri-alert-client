@@ -28,6 +28,8 @@
 
 @interface AppDelegate ()<UIActionSheetDelegate>
 
+@property (nonatomic) NSString* pendingUsername;
+
 @end
 
 @implementation AppDelegate
@@ -39,8 +41,10 @@
 
     [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
 
-    if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
-        [self launchViewer];
+    NSDictionary* userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (userInfo) {
+        // NSLog(@"application:didFinishLaunchingWithOptions: w/ userInfo in launchOptions: %@", userInfo);
+        [self launchViewerWithUsername:userInfo[@"username"]];
     }
 
     return YES;
@@ -48,7 +52,7 @@
 
 -(void)applicationWillResignActive:(UIApplication*)application
 {
-    NSLog(@"applicationWillResignActive.");
+    // NSLog(@"applicationWillResignActive.");
 
     if ([[PFInstallation currentInstallation] isDirty]) {
         // saveInBackground will not be executed, so use save here
@@ -69,13 +73,13 @@
     [currentInstallation saveInBackground];
 }
 
-// TODO: handle notification for sub users, not main user
 -(void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo
 {
-    // NSLog(@"applicationDidReceiveRemoteNotification w/ userInfo: %@", userInfo);
+    // NSLog(@"application:DidReceiveRemoteNotification: w/ userInfo: %@", userInfo);
+    NSString* username = userInfo[@"username"];
 
     if (application.applicationState == UIApplicationStateInactive) {
-        [self launchViewer];
+        [self launchViewerWithUsername:username];
     }
     else if (application.applicationState == UIApplicationStateActive) {
         NSString* title = @"配信がはじまりました";
@@ -90,6 +94,7 @@
             actionSheet.cancelButtonIndex = actionSheet.numberOfButtons-1;
 
             UIView* mainView = self.window.rootViewController.view;
+            self.pendingUsername = username;
             [actionSheet showInView:mainView];
         }
         else {
@@ -109,19 +114,19 @@
         return;
     }
 
-    [self launchViewer];
+    [self launchViewerWithUsername:self.pendingUsername];
 }
 
 #pragma mark - Private Methods
 
--(void)launchViewer
+-(void)launchViewerWithUsername:(NSString*)username
 {
     if (![TwitCastingUtility canOpenLive]) {
         return;
     }
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [TwitCastingUtility openLive];
+            [TwitCastingUtility openLiveWithUsername:username];
         });
 }
 
